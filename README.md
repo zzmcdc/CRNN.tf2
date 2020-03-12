@@ -2,8 +2,6 @@
 
 This is a re-implementation of [CRNN](http://arxiv.org/abs/1507.05717) network, build by tensorflow 2. This repository allows you to understand how to build an end-to-end text recognition network in a simple way. By the way, Here is official [repo](https://github.com/bgshih/crnn).
 
-**I am building a [EAST network for scene text detection by tensorflow 2](https://github.com/FLming/EAST.tf2), if you are interested, welcome to build together**
-
 ## Abstract
 
 ### Requirements
@@ -14,12 +12,11 @@ tensorflow >= 2.0.0
 
 ### Features
 
-- Easy to understand
-- Easy to change the backbone
-- Easy to use other components of TensorFlow, such as serving
-- [x] Tensorflow serving
-- [ ] Tensorflow lite
+- [x] Easy to understand
+- [x] Easy to change the backbone
+- [x] Work with Tensorflow serving
 - [ ] Distributed training
+- [ ] Work with Tensorflow lite
 
 This repo aims to build a simple, efficient, end-to-end text recognize network by using the various components of tensorflow 2.
 
