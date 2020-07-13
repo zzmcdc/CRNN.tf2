@@ -15,8 +15,6 @@ parser.add_argument('-ta', '--train_ann_paths', type=str,
                     help='The path of training data annnotation file.')
 parser.add_argument('-va', '--val_ann_paths', type=str, nargs='+',
                     help='The path of val data annotation file.')
-parser.add_argument('-t', '--table_path', type=str, required=True,
-                    help='The path of table file.')
 parser.add_argument('-w', '--img_width', type=int, default=100,
                     help='Image width, this parameter will affect the output '
                          'shape of the model, default is 100, so this model '
