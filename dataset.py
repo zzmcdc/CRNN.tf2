@@ -18,10 +18,14 @@ class DatasetBuilder():
         self.classes = classes
 
     def decode_and_resize(self, filename, label_str):
-        img = cv2.imread(filename)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = img.astype("float32")
-        img = cv2.resize(img, (self.img_width, 32))
+        img = tf.io.read_file(filename)
+        img = tf.io.decode_jpeg(img, channels=self.img_channels)
+        img = tf.image.convert_image_dtype(img, tf.float32)
+        img = tf.image.resize(img, (32, self.img_width))
+        # img = cv2.imread(filename)
+        # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # img = img.astype("float32")
+        # img = cv2.resize(img, (self.img_width, 32))
         label = []
         for number in range(len(label_str)):
             label[number] = self.classes.index(label_str[number])
