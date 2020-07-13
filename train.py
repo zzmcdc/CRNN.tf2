@@ -3,7 +3,7 @@ import time
 import os
 
 from tensorflow import keras
-from tensorflow.keras.utils.training_utils import multi_gpu_model
+from tensorflow.keras.utils import multi_gpu_model
 
 from dataset import DatasetBuilder
 from model import build_model
