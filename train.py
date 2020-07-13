@@ -65,7 +65,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(num_classes, channels=args.img_channels)
 
-model = multi_gpu_model(model, gpus=2)
+model = multi_gpu_model(model, gpus=4)
 
 
 model.compile(optimizer=keras.optimizers.Adam(args.learning_rate),
