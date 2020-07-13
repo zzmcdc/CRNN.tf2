@@ -2,7 +2,6 @@ import os
 import re
 
 import tensorflow as tf
-import cv2
 
 
 class UnsupportedFormatError(Exception):
@@ -10,28 +9,27 @@ class UnsupportedFormatError(Exception):
 
 
 class DatasetBuilder():
-    def __init__(self, classes, img_width, img_channels, ignore_case=False):
+    def __init__(self, label_path, img_width, img_channels, ignore_case=False):
 
         self.img_width = img_width
         self.img_channels = img_channels
         self.ignore_case = ignore_case
-        self.classes = classes
+        self.table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
+            label_path, tf.string, tf.lookup.TextFileIndex.WHOLE_LINE,
+            tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER), -1)
+        self.num_classes = self.table.size()
 
     @tf.function
-    def decode_and_resize(self, filename, label_str):
+    def decode_and_resize(self, filename, labels):
         img = tf.io.read_file(filename)
         img = tf.io.decode_jpeg(img, channels=self.img_channels)
         img = tf.image.convert_image_dtype(img, tf.float32)
         img = tf.image.resize(img, (32, self.img_width))
-        # img = cv2.imread(filename)
-        # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # img = img.astype("float32")
-        # img = cv2.resize(img, (self.img_width, 32))
-        label_str = tf.strings.unicode_split(label_str, 'UTF-8')
-        label = []
-        for number in range(len(label_str)):
-            label[number] = self.classes.index(label_str[number])
-        return img, label
+
+        chars = tf.strings.unicode_split(labels, 'UTF-8')
+        tokens = tf.ragged.map_flat_values(self.table.lookup, chars)
+        tokens = tokens.to_sparse()
+        return img, tokens
 
     def build(self, anno_path, shuffle, batch_size):
         """

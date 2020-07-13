@@ -44,7 +44,7 @@ with open(args.charset) as to_read:
 num_classes = len(classes) + 1
 
 dataset_builder = DatasetBuilder(
-    classes, args.img_width, args.img_channels, args.ignore_case)
+    args.charset, args.img_width, args.img_channels, args.ignore_case)
 train_ds, train_size = dataset_builder.build(
     args.train_ann_paths, True, args.batch_size)
 
