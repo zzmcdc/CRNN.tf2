@@ -45,23 +45,26 @@ with open(args.charset) as to_read:
     classes = list(to_read.read().strip())
 num_classes = len(classes) + 1
 
-dataset_builder = DatasetBuilder(args.table_path, args.img_width, args.img_channels, args.ignore_case)
-train_ds, train_size = dataset_builder.build(args.train_ann_paths, True, args.batch_size)
+dataset_builder = DatasetBuilder(
+    classes, args.img_width, args.img_channels, args.ignore_case)
+train_ds, train_size = dataset_builder.build(args.ta, True, args.batch_size)
 
 print('Num of training samples: {}'.format(train_size))
 saved_model_prefix = '{epoch:03d}_{word_accuracy:.4f}'
 if args.val_ann_paths:
-    val_ds, val_size = dataset_builder.build(args.val_ann_paths, False, args.batch_size)
+    val_ds, val_size = dataset_builder.build(args.va, False, args.batch_size)
     print('Num of val samples: {}'.format(val_size))
     saved_model_prefix = saved_model_prefix + '_{val_word_accuracy:.4f}'
 else:
     val_ds = None
-saved_model_path = ('saved_models/{}/'.format(localtime) + saved_model_prefix + '.h5')
+saved_model_path = ('saved_models/{}/'.format(localtime) +
+                    saved_model_prefix + '.h5')
 os.makedirs('saved_models/{}'.format(localtime))
 print('Training start at {}'.format(localtime))
 
 model = build_model(num_classes, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate), loss=CTCLoss(), metrics=[WordAccuracy()])
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate),
+              loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
     model.load_weights(args.restore, by_name=True, skip_mismatch=True)
