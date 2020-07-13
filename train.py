@@ -41,7 +41,7 @@ localtime = time.asctime()
 
 with open(args.charset) as to_read:
     classes = list(to_read.read().strip())
-num_classes = len(classes) + 1
+num_classes = len(classes)
 
 dataset_builder = DatasetBuilder(
     args.charset, args.img_width, args.img_channels, args.ignore_case)
