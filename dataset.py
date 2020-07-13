@@ -19,17 +19,19 @@ class DatasetBuilder():
             tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER), -1)
         self.num_classes = self.table.size()
 
-    @tf.function
     def decode_and_resize(self, filename, labels):
         img = tf.io.read_file(filename)
         img = tf.io.decode_jpeg(img, channels=self.img_channels)
         img = tf.image.convert_image_dtype(img, tf.float32)
         img = tf.image.resize(img, (32, self.img_width))
 
+        return img, labels
+
+    def tokenize(self, imgs, labels):
         chars = tf.strings.unicode_split(labels, 'UTF-8')
         tokens = tf.ragged.map_flat_values(self.table.lookup, chars)
         tokens = tokens.to_sparse()
-        return img, tokens
+        return imgs, tokens
 
     def build(self, anno_path, shuffle, batch_size):
         """
@@ -57,6 +59,8 @@ class DatasetBuilder():
         # Ignore the errors e.g. decode error or invalid data.
         ds = ds.apply(tf.data.experimental.ignore_errors())
         ds = ds.batch(batch_size)
+        ds = ds.map(self.tokenize,
+                    num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
         return ds, size
 
