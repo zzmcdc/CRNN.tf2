@@ -26,8 +26,8 @@ class DatasetBuilder():
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # img = img.astype("float32")
         # img = cv2.resize(img, (self.img_width, 32))
-        label_str = label_str.numpy().decode('utf-8')
         label = []
+        label_str = tf.strings.unicode_split(label_str, 'UTF-8')
         for number in range(len(label_str)):
             label[number] = self.classes.index(label_str[number])
         return img, label
