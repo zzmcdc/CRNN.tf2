@@ -38,7 +38,5 @@ def build_model(num_classes, image_width=None, channels=1):
     x = vgg_style(img_input)
     x = layers.Reshape((-1, 512))(x)
 
-    x = layers.Bidirectional(layers.LSTM(units=256, return_sequences=True))(x)
-    x = layers.Bidirectional(layers.LSTM(units=256, return_sequences=True))(x)
     x = layers.Dense(units=num_classes)(x)
     return keras.Model(inputs=img_input, outputs=x, name='CRNN')
