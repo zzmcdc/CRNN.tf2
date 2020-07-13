@@ -10,9 +10,7 @@ class UnsupportedFormatError(Exception):
 
 
 class DatasetBuilder():
-    def __init__(self, anno_path, classes, img_width, img_channels, ignore_case=False):
-        with open(anno_path, 'r') as f:
-            self.ann_lines = f.readlines()
+    def __init__(self, classes, img_width, img_channels, ignore_case=False):
 
         self.img_width = img_width
         self.img_channels = img_channels
@@ -29,10 +27,13 @@ class DatasetBuilder():
             label[number] = self.classes.index(label_str[number])
         return img, label
 
-    def build(self, shuffle, batch_size):
+    def build(self, anno_path, shuffle, batch_size):
         """
         build dataset, it will auto detect each annotation file's format.
         """
+        with open(anno_path, 'r') as f:
+            self.ann_lines = f.readlines()
+
         img_paths = []
         labels = []
         for item in self.ann_lines:
@@ -47,7 +48,8 @@ class DatasetBuilder():
         ds = tf.data.Dataset.from_tensor_slices((img_paths, labels))
         if shuffle:
             ds = ds.shuffle(buffer_size=10000)
-        ds = ds.map(self.decode_and_resize, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds = ds.map(self.decode_and_resize,
+                    num_parallel_calls=tf.data.experimental.AUTOTUNE)
         # Ignore the errors e.g. decode error or invalid data.
         ds = ds.apply(tf.data.experimental.ignore_errors())
         ds = ds.batch(batch_size)
