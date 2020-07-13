@@ -53,7 +53,7 @@ class DatasetBuilder():
         size = len(img_paths)
         ds = tf.data.Dataset.from_tensor_slices((img_paths, labels))
         if shuffle:
-            ds = ds.shuffle(buffer_size=10000)
+            ds = ds.shuffle(buffer_size=1000000)
         ds = ds.map(self.decode_and_resize,
                     num_parallel_calls=tf.data.experimental.AUTOTUNE)
         # Ignore the errors e.g. decode error or invalid data.
