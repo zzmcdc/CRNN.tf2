@@ -17,7 +17,7 @@ class DatasetBuilder():
         self.ignore_case = ignore_case
         self.classes = classes
 
-    @tf.functon
+    @tf.function
     def decode_and_resize(self, filename, label_str):
         img = tf.io.read_file(filename)
         img = tf.io.decode_jpeg(img, channels=self.img_channels)
