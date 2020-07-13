@@ -15,6 +15,8 @@ parser.add_argument('-ta', '--train_ann_paths', type=str,
                     help='The path of training data annnotation file.')
 parser.add_argument('-va', '--val_ann_paths', type=str, nargs='+',
                     help='The path of val data annotation file.')
+parser.add_argument('-t', '--table_path', type=str, required=True,
+                    help='The path of table file.')
 parser.add_argument('-w', '--img_width', type=int, default=100,
                     help='Image width, this parameter will affect the output '
                          'shape of the model, default is 100, so this model '
@@ -45,12 +47,14 @@ num_classes = len(classes) + 1
 
 dataset_builder = DatasetBuilder(
     classes, args.img_width, args.img_channels, args.ignore_case)
-train_ds, train_size = dataset_builder.build(args.ta, True, args.batch_size)
+train_ds, train_size = dataset_builder.build(
+    args.train_ann_paths, True, args.batch_size)
 
 print('Num of training samples: {}'.format(train_size))
 saved_model_prefix = '{epoch:03d}_{word_accuracy:.4f}'
 if args.val_ann_paths:
-    val_ds, val_size = dataset_builder.build(args.va, False, args.batch_size)
+    val_ds, val_size = dataset_builder.build(
+        args.val_ann_paths, False, args.batch_size)
     print('Num of val samples: {}'.format(val_size))
     saved_model_prefix = saved_model_prefix + '_{val_word_accuracy:.4f}'
 else:
