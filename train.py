@@ -3,7 +3,6 @@ import time
 import os
 
 from tensorflow import keras
-from tensorflow.keras.utils import multi_gpu_model
 
 from dataset import DatasetBuilder
 from model import build_model
@@ -65,7 +64,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(num_classes, channels=args.img_channels)
 
-model = multi_gpu_model(model, gpus=4)
+#model = multi_gpu_model(model, gpus=4)
 
 
 model.compile(optimizer=keras.optimizers.Adam(args.learning_rate),
