@@ -67,7 +67,7 @@ model = build_model(num_classes, channels=args.img_channels)
 #model = multi_gpu_model(model, gpus=4)
 
 
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.001),
+model.compile(optimizer=keras.optimizers.SGD(args.learning_rate,momentum=0.9, clipnorm=1.0),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
