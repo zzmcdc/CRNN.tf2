@@ -105,14 +105,13 @@ model = build_model(num_classes, channels=args.img_channels)
 #model = multi_gpu_model(model, gpus=4)
 
 
-model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9, clipnorm=1.0),
+model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9, clipnorm=0.01),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
     model.load_weights(args.restore, by_name=True, skip_mismatch=True)
 
-warm_up_lr = WarmUpLearningRateScheduler(1000, init_lr=0.0)
-callbacks = [warm_up_lr, keras.callbacks.ModelCheckpoint(saved_model_path),
+callbacks = [keras.callbacks.ModelCheckpoint(saved_model_path),
              keras.callbacks.TensorBoard(log_dir='logs/{}'.format(localtime),
                                          profile_batch=0)]
 model.fit(train_ds, epochs=args.epochs, callbacks=callbacks,
