@@ -42,12 +42,12 @@ localtime = time.asctime()
 
 
 dataset_builder = DatasetBuilder(
-    args.charset, args.img_width, args.img_channels, args.ignore_case)
+    args.charset, args.img_width, args.img_channels, img_width, args.ignore_case)
 train_ds, train_size = dataset_builder.build(
     args.train_ann_paths, True, args.batch_size)
 
 print('Num of training samples: {}'.format(train_size))
-print("num of label",dataset_builder.num_classes)
+print("num of label", dataset_builder.num_classes)
 saved_model_prefix = '{epoch:03d}_{word_accuracy:.4f}'
 if args.val_ann_paths:
     val_ds, val_size = dataset_builder.build(
