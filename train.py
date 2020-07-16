@@ -40,9 +40,6 @@ args = parser.parse_args()
 
 localtime = time.asctime()
 
-with open(args.charset) as to_read:
-    classes = list(to_read.read().strip())
-num_classes = len(classes)
 
 dataset_builder = DatasetBuilder(
     args.charset, args.img_width, args.img_channels, args.ignore_case)
@@ -50,6 +47,7 @@ train_ds, train_size = dataset_builder.build(
     args.train_ann_paths, True, args.batch_size)
 
 print('Num of training samples: {}'.format(train_size))
+print("num of label",dataset_builder.num_classes)
 saved_model_prefix = '{epoch:03d}_{word_accuracy:.4f}'
 if args.val_ann_paths:
     val_ds, val_size = dataset_builder.build(
@@ -63,12 +61,12 @@ saved_model_path = ('saved_models/{}/'.format(localtime) +
 os.makedirs('saved_models/{}'.format(localtime))
 print('Training start at {}'.format(localtime))
 
-model = build_model(DatasetBuilder.num_classes, channels=args.img_channels)
+model = build_model(dataset_builder.num_classes, channels=args.img_channels)
 
 #model = multi_gpu_model(model, gpus=4)
 
 
-model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9, clipnorm=0.01),
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.01),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
