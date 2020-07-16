@@ -9,5 +9,5 @@ num_classes = len(classes) +1
 print(num_classes)
 model = build_model(num_classes,256, 1)
 model.load_weights(restore, by_name=True, skip_mismatch=True)
-
+print(model.summary())
 model.save("crnn_tf")

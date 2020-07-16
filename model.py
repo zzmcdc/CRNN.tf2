@@ -37,7 +37,7 @@ def build_model(num_classes, image_width=None, channels=1):
 
     img_input = keras.Input(shape=(32, image_width, channels))
     x = vgg_style(img_input)
-    x = layers.Reshape((-1, 512))(x)
+    x = layers.Reshape((63, 512))(x)
 
     x = layers.Dense(units=num_classes, kernel_regularizer=l2(
         0.01), bias_regularizer=l2(0.01))(x)
