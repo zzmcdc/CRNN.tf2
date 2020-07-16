@@ -1,5 +1,6 @@
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras.regularizers import l2
 
 
 def vgg_style(input_tensor):
@@ -38,5 +39,6 @@ def build_model(num_classes, image_width=None, channels=1):
     x = vgg_style(img_input)
     x = layers.Reshape((-1, 512))(x)
 
-    x = layers.Dense(units=num_classes)(x)
+    x = layers.Dense(units=num_classes, kernel_regularizer=l2(
+        0.01), bias_regularizer=l2(0.01))(x)
     return keras.Model(inputs=img_input, outputs=x, name='CRNN')
