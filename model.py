@@ -26,7 +26,7 @@ def vgg_style(input_tensor):
     x = layers.Conv2D(512, 3, padding='same', activation='relu')(x)
     x = layers.MaxPool2D(pool_size=2, strides=(2, 1), padding='same')(x)
 
-    x = layers.Conv2D(512, 2, use_bias=False)(x)
+    x = layers.Conv2D(2048, 2, use_bias=False)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     return x
@@ -37,8 +37,7 @@ def build_model(num_classes, image_width=None, channels=1):
 
     img_input = keras.Input(shape=(32, image_width, channels))
     x = vgg_style(img_input)
-    x = layers.Reshape((63, 512))(x)
+    x = layers.Reshape((63, 2048))(x)
 
-    x = layers.Dense(units=num_classes, kernel_regularizer=l2(
-        0.01), bias_regularizer=l2(0.01))(x)
+    x = layers.Dense(units=num_classes)(x)
     return keras.Model(inputs=img_input, outputs=x, name='CRNN')

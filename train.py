@@ -67,7 +67,7 @@ model = build_model(dataset_builder.num_classes,
 #model = multi_gpu_model(model, gpus=4)
 
 
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=1),
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
