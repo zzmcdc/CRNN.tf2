@@ -63,11 +63,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(dataset_builder.num_classes,
                     args.img_width, channels=args.img_channels)
-
-#model = multi_gpu_model(model, gpus=4)
-
-
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate,clipnorm=0.01),
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipvalue=0.01),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
