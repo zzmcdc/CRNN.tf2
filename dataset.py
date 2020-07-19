@@ -21,7 +21,10 @@ class DatasetBuilder():
 
     def decode_and_resize(self, filename, labels):
         img = tf.io.read_file(filename)
-        img = tf.io.decode_jpeg(img, channels=self.img_channels)
+        img = tf.io.decode_jpeg(img, channels=3)
+        img = tf.image.random_brightness(img, 0.5)
+        img = tf.image.random_saturation(img, 0, 5)
+        img = tf.image.rgb_to_grayscale(img)
         img = tf.image.convert_image_dtype(img, tf.float32)
         img = tf.image.resize(img, (32, self.img_width))
 
@@ -53,7 +56,7 @@ class DatasetBuilder():
         size = len(img_paths)
         ds = tf.data.Dataset.from_tensor_slices((img_paths, labels))
         if shuffle:
-            ds = ds.shuffle(buffer_size=100000,reshuffle_each_iteration=True)
+            ds = ds.shuffle(buffer_size=100000, reshuffle_each_iteration=True)
         ds = ds.map(self.decode_and_resize,
                     num_parallel_calls=tf.data.experimental.AUTOTUNE)
         # Ignore the errors e.g. decode error or invalid data.
