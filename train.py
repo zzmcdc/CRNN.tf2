@@ -8,7 +8,7 @@ from model import build_model
 from losses import CTCLoss
 from metrics import WordAccuracy
 from tensorflow.keras import backend as K
-
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-ta', '--train_ann_paths', type=str,
