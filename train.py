@@ -208,7 +208,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(dataset_builder.num_classes,
                     args.img_width, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate,clipvalue=0.01),
+model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9, clipnorm=0.01),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
@@ -220,8 +220,7 @@ warm_up_lr = WarmUpCosineDecayScheduler(learning_rate_base=args.learning_rate,
                                         total_steps=args.epochs * epoch_batch,
                                         warmup_learning_rate=0.0,
                                         warmup_steps=epoch_batch,
-                                        hold_base_rate_steps=0,
-                                        verbose=1)
+                                        hold_base_rate_steps=0)
 
 
 callbacks = [warm_up_lr,
