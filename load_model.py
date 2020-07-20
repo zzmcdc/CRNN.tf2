@@ -1,7 +1,7 @@
 import os
 from tensorflow import keras
 from model import build_model
-restore = './008_0.3520_0.3214.h5'
+restore = './026_0.7094_0.3820.h5'
 
 with open("./label.txt") as to_read:
     classes = list(to_read.read().strip())
