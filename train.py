@@ -208,7 +208,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(dataset_builder.num_classes,
                     args.img_width, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9, clipnorm=0.1),
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.05),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
