@@ -29,7 +29,7 @@ def vgg_style(input_tensor):
     x = layers.Conv2D(1024, 2, use_bias=False)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
-    x = layers.Dropout(0.5)(x)
+    x = layers.Dropout(0.3)(x)
     return x
 
 
@@ -40,5 +40,5 @@ def build_model(num_classes, image_width=None, channels=1):
     x = vgg_style(img_input)
     x = layers.Reshape((63, 1024))(x)
 
-    x = layers.Dense(units=num_classes)(x)
+    x = layers.Dense(units=num_classes,kernel_regularizer=regularizers.l2(1e-4))(x)
     return keras.Model(inputs=img_input, outputs=x, name='CRNN')
