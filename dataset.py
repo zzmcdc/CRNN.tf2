@@ -21,10 +21,7 @@ class DatasetBuilder():
 
     def decode_and_resize(self, filename, labels):
         img = tf.io.read_file(filename)
-        img = tf.io.decode_jpeg(img, channels=3)
-        img = tf.image.random_brightness(img, 0.5)
-        img = tf.image.random_saturation(img, 0, 5)
-        img = tf.image.rgb_to_grayscale(img)
+        img = tf.io.decode_jpeg(img, channels=1)
         img = tf.image.convert_image_dtype(img, tf.float32)
         img = tf.image.resize(img, (32, self.img_width))
 
