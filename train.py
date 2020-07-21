@@ -210,7 +210,7 @@ strategy = tf.distribute.MirroredStrategy()
 with strategy.scope():
     model = build_model(dataset_builder.num_classes,
                         args.img_width, channels=args.img_channels)
-    model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.1),
+    model.compile(optimizer=keras.optimizers.Adam(args.learning_rate),
                   loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
