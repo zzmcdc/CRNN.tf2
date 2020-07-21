@@ -206,10 +206,12 @@ saved_model_path = ('saved_models/{}/'.format(localtime) +
 os.makedirs('saved_models/{}'.format(localtime))
 print('Training start at {}'.format(localtime))
 
-model = build_model(dataset_builder.num_classes,
-                    args.img_width, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate,clipnorm=0.1),
-              loss=CTCLoss(), metrics=[WordAccuracy()])
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = build_model(dataset_builder.num_classes,
+                        args.img_width, channels=args.img_channels)
+    model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.1),
+                  loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
     model.load_weights(args.restore, by_name=True, skip_mismatch=True)
