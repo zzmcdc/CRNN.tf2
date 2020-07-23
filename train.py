@@ -208,7 +208,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(dataset_builder.num_classes,
                     args.img_width, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.1),
+model.compile(optimizer=keras.optimizers.Adam(args.learning_rate, clipnorm=0.001),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
@@ -223,7 +223,7 @@ warm_up_lr = WarmUpCosineDecayScheduler(learning_rate_base=args.learning_rate,
                                         hold_base_rate_steps=0)
 
 
-callbacks = [warm_up_lr,
+callbacks = [
              tf.keras.callbacks.TerminateOnNaN(),
              keras.callbacks.ModelCheckpoint(saved_model_path),
              keras.callbacks.TensorBoard(log_dir='logs/{}'.format(localtime), profile_batch=0)]
