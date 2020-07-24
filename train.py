@@ -220,10 +220,10 @@ warm_up_lr = WarmUpCosineDecayScheduler(learning_rate_base=args.learning_rate,
                                         total_steps=args.epochs * epoch_batch,
                                         warmup_learning_rate=0.0,
                                         warmup_steps=epoch_batch,
-                                        hold_base_rate_steps=0)
+                                        hold_base_rate_steps=10 * epoch_batch)
 
 
-callbacks = [
+callbacks = [warm_up_lr,
              tf.keras.callbacks.TerminateOnNaN(),
              keras.callbacks.ModelCheckpoint(saved_model_path),
              keras.callbacks.TensorBoard(log_dir='logs/{}'.format(localtime), profile_batch=0)]
