@@ -220,7 +220,7 @@ warm_up_lr = WarmUpCosineDecayScheduler(learning_rate_base=args.learning_rate,
                                         total_steps=args.epochs * epoch_batch,
                                         warmup_learning_rate=0.0,
                                         warmup_steps=epoch_batch,
-                                        hold_base_rate_steps=10 * epoch_batch)
+                                        hold_base_rate_steps=0)
 
 
 callbacks = [warm_up_lr,

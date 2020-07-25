@@ -39,10 +39,10 @@ def vgg_style(input_tensor):
 
     x = layers.MaxPool2D(pool_size=2, strides=(2, 1), padding='same')(x)
 
-    x = layers.Conv2D(1024, 2, use_bias=False)(x)
+    x = layers.Conv2D(512, 2, use_bias=False)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
-    x = layers.Dropout(0.3)(x)
+    x = layers.Dropout(0.5)(x)
     return x
 
 
