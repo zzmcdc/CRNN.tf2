@@ -172,6 +172,7 @@ class WarmUpCosineDecayScheduler(keras.callbacks.Callback):
         self.global_step = self.global_step + 1
         lr = K.get_value(self.model.optimizer.lr)
         self.learning_rates.append(lr)
+        return lr
 
     def on_batch_begin(self, batch, logs=None):
         lr = cosine_decay_with_warmup(global_step=self.global_step,
@@ -208,7 +209,7 @@ print('Training start at {}'.format(localtime))
 
 model = build_model(dataset_builder.num_classes,
                     args.img_width, channels=args.img_channels)
-model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9,  clipnorm=0.1),
+model.compile(optimizer=keras.optimizers.SGD(args.learning_rate, momentum=0.9,  clipnorm=1.0),
               loss=CTCLoss(), metrics=[WordAccuracy()])
 
 if args.restore:
@@ -220,7 +221,7 @@ warm_up_lr = WarmUpCosineDecayScheduler(learning_rate_base=args.learning_rate,
                                         total_steps=args.epochs * epoch_batch,
                                         warmup_learning_rate=0.0,
                                         warmup_steps=epoch_batch,
-                                        hold_base_rate_steps=0)
+                                        hold_base_rate_steps=4*epoch_batch)
 
 
 callbacks = [warm_up_lr,
